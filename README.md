@@ -52,7 +52,8 @@ This document introduces the first delivery of the test project for Zoe Financia
 5. **Code Quality**  
    - Clean up styles and polish code.  
    - Create shared components for better reusability.  
-   - Improve overall code structure and quality.  
+   - Improve overall code structure and quality.
+   - Typescript types implementation and coverage across all app 
 
 ---
 
