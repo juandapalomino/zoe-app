@@ -1,95 +1,69 @@
+"use client";
+
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const [income, setIncome] = useState("");
+
+  const router = useRouter();
+  const handleInputChange = (e) => {
+    setIncome(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Handle submit", income);
+    router.push(`/advisors?income=${income}`);
+  };
+
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
+      <Image src="/zoe-logo.svg" alt="Zoe Logo" width={133} height={58} />
+      <div className={styles.advisorsIcon}>
         <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+          src="/image-portrait.svg"
+          alt="Portrait Icon"
+          width={40}
+          height={40}
         />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+      </div>
+      <h2 className={styles.title}>Find Your Company Advisors!</h2>
+      <p className={styles.subtitle}>Search by income to find your advisors</p>
+      <form className={styles.searchAdvisorForm} onSubmit={handleSubmit}>
+        <label className={styles.inputLabel} htmlFor="income">
+          Current Income
+        </label>
+        <div className={styles.customInput}>
+          <Image
+            className={styles.inputIcon}
+            src="/currency.svg"
+            alt="Currency Icon"
+            width={11}
+            height={18}
+          />
+          <input
+            className={styles.input}
+            id="income"
+            type="number"
+            min="10000"
+            value={income}
+            onChange={handleInputChange}
+            placeholder="Enter current income..."
+          ></input>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <button className={styles.submitButton} type="submit">
+          Search Now
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src="/find-icon.svg"
+            alt="Portrait Icon"
+            width={14}
+            height={14}
           />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </button>
+      </form>
     </div>
   );
 }
