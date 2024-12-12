@@ -1,4 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project Readme: Initial Delivery
+
+## Introduction
+
+This document introduces the first delivery of the test project for Zoe Financial. While the core structure and foundational features are implemented, the project is still a work in progress, with several functionalities and polish tasks remaining. Below is a summary of the completed and pending tasks to provide clarity on the project's current state.
+
+---
+
+## *Implemented Features*
+
+1. **Styling**
+   - Start page, advisors page, single advisor page, and edit modal styling completed (final polish ongoing).  
+
+2. **Validation** 
+   - 5-digit validation for query input on the start page and advisors page, including edge case handling for invalid income values.  
+
+3. **Database Integration**  
+   - Dynamic population of the advisors' table with connection to the database.  
+
+4. **Filtering**  
+   - Filtering functionality for advisors based on income.  
+
+5. **Advisor Details**  
+   - "Details" button with animation for enhanced user experience.  
+
+6. **Single Advisor Page**  
+   - Data fetching from a JSON API to display advisor details.  
+
+7. **Edit Modal**  
+   - Created with responsive design for mobile devices and basic support integrated.  
+
+---
+
+## *Pending Tasks*
+
+1. **Functionality Enhancements**  
+   - Implement delete functionality for advisors.  
+   - Complete the functionality of the edit modal.  
+
+2. **Data Refinement**  
+   - Revisit advisor object fields and finalize which ones should remain.  
+   - Polish JSON file to address broken image issues and add additional data.  
+
+3. **Table Features**  
+   - Add sorting functionality for the advisors' table.  
+   - Implement search functionality on the main page.  
+   - Add pagination logic and styles.  
+
+4. **Additional Features**  
+   - Add support for creating a new advisor.  
+
+5. **Code Quality**  
+   - Clean up styles and polish code.  
+   - Create shared components for better reusability.  
+   - Improve overall code structure and quality.  
+
+---
+
+## *Suggestions and Ideas Implemented*
+
+1. Placeholder added to the start page input for improved usability.  
+2. Hover states designed to enhance clarity for interactive elements.  
+3. Displaying the quantity of advisors found and the range of income used for filtering.  
+4. Header and navbar maintain padding for consistent layout across the site.  
+5. Edit modal transitions added for a smoother user experience.  
+
+---
+
+## Notes
+
+While the project has a solid foundation, there are several aspects requiring further development and refinement. Feedback is welcome as we continue to improve and expand the functionality.
 
 ## Getting Started
 
