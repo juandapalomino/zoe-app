@@ -1,0 +1,36 @@
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 8px;
+  color: #3f3e3a;
+}
+
+.field input {
+  font-size: 14px;
+  padding: 13px 15px;
+  width: 100%;
+  outline: none;
+  background: #ffffff;
+  color: #5f5f5f;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  transition: 0.3s ease;
+  font-family: "Rubik", "Rubik Fallback", sans-serif;
+  font-weight: 400;
+}
+
+.field input:focus {
+  border: 1px solid #5373e3;
+  box-shadow: 0 0 5px rgba(83, 115, 227, 0.3);
+}
+
+.field input::placeholder {
+  color: #ebebeb;
+  font-size: 14px;
+  font-weight: 300;
+}

@@ -1,132 +1,131 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import styles from "./page.module.css";
 import { noto } from "../../ui/fonts";
+import { Advisor, AdvisorFormValues } from "../../types/advisor";
+import AdvisorForm from "../../shared/AdvisorForm";
+
+import {
+  getAdvisor,
+  updateAdvisor,
+  deleteAdvisorById,
+} from "../../services/advisorService";
+import { formatCurrency } from "../../utils/format";
+
+import Button from "../../shared/Button";
+import Modal from "../../shared/Modal";
 
 const AdvisorDetailsPage = () => {
-  const params = useParams();
+  const { id } = useParams();
   const router = useRouter();
-  const { id } = params;
-  const [advisor, setAdvisor] = useState({});
+
+  const [advisor, setAdvisor] = useState<Advisor | null>(null);
+  const [formValues, setFormValues] = useState<AdvisorFormValues>({
+    name: "",
+    identification: "",
+    income: "",
+    company: "",
+    education: "",
+    degree: "",
+    level: "",
+    years: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
   const [editModalOpen, setEditModalOpen] = useState(false);
-
-  // Edit modal state
-  const [name, setName] = useState("");
-  const [identification, setIdentification] = useState("");
-  const [income, setIncome] = useState("");
-  const [company, setCompany] = useState("");
-  const [education, setEducation] = useState("");
-  const [degree, setDegree] = useState("");
-  const [level, setLevel] = useState("");
-  const [years, setYears] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-
-  const [savedKey, setSavedKey] = useState(0);
 
   const [notificationMessage, setNotificationMessage] = useState("");
 
-  const formatCurrency = (amount) => {
-    return `$${amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
-  };
-
-  const setAdvisorEditState = (data) => {
-    setName(data.name);
-    setIdentification(data.identification);
-    setIncome(data.income);
-    setCompany(data.company);
-    setEducation(data.education);
-    setDegree(data.degree);
-    setLevel(data.level);
-    setYears(data.years);
-    setEmail(data.email);
-    setPhone(data.phone);
-  };
-
-  const handleEditFormSubmit = async (e) => {
-    e.preventDefault();
-    const editedAdvisor = {
-      ...advisor,
-      name,
-      identification,
-      income: Number(income),
-      company,
-      education,
-      degree,
-      level,
-      years,
-      email,
-      phone,
-    };
-    try {
-      const response = await fetch(
-        `http://localhost:3001/advisor/${advisor.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editedAdvisor),
-        }
-      );
-
-      if (response.ok) {
-        setSavedKey((prev) => prev + 1);
-        setEditModalOpen(false);
-        setNotificationMessage("Advisor updated succesfully!");
-        setTimeout(() => {
-          setNotificationMessage("");
-        }, 2000);
-      } else {
-        setNotificationMessage("Failed to update advisor");
-        setTimeout(() => {
-          setNotificationMessage("");
-        }, 2000);
+  useEffect(() => {
+    const fetchAdvisorData = async () => {
+      try {
+        const data = await getAdvisor(id);
+        setAdvisor(data);
+        setFormValues({
+          name: data.name,
+          identification: data.identification,
+          income: data.income.toString(),
+          company: data.company,
+          education: data.education,
+          degree: data.degree,
+          level: data.level,
+          years: data.years,
+          email: data.email,
+          phone: data.phone,
+          address: data.address,
+        });
+      } catch (error) {
+        console.error("Error fetching advisor:", error);
       }
+    };
+    fetchAdvisorData();
+  }, [id]);
+
+  const handleUpdateAdvisor = async (values: AdvisorFormValues) => {
+    if (!advisor) return;
+
+    const updatedAdvisor: Advisor = {
+      ...advisor,
+      ...values,
+      income: Number(values.income),
+    };
+
+    try {
+      await updateAdvisor(updatedAdvisor);
+      setAdvisor(updatedAdvisor);
+      setNotificationMessage("Advisor updated successfully!");
+      setTimeout(() => setNotificationMessage(""), 2000);
+      setEditModalOpen(false);
     } catch (error) {
       console.error("Error updating advisor:", error);
+      setNotificationMessage("Failed to update advisor");
+      setTimeout(() => setNotificationMessage(""), 2000);
     }
   };
 
-  useEffect(() => {
-    fetch(`http://localhost:3001/advisor/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setAdvisor(data);
-        setAdvisorEditState(data);
-      })
-      .catch((error) => console.error("Error fetching advisor:", error));
-  }, [savedKey]);
+  const handleEditFormSubmit = async (e: React.FormEvent) => {
+    console.log("SUBMID");
+    e.preventDefault();
+    const updatedAdvisor: Advisor = {
+      ...advisor,
+      ...formValues,
+      income: Number(formValues.income),
+    };
 
-  const handleOverlayClick = (e) => {
-    // if (e.target.classList.contains(styles.modalOverlay)) {
-    //   setEditModalOpen(false);
-    // }
+    try {
+      await updateAdvisor(updatedAdvisor);
+      setAdvisor(updatedAdvisor);
+      setNotificationMessage("Advisor updated successfully!");
+      setTimeout(() => setNotificationMessage(""), 2000);
+      setEditModalOpen(false);
+    } catch (error) {
+      console.error("Error updating advisor:", error);
+      setNotificationMessage("Failed to update advisor");
+      setTimeout(() => setNotificationMessage(""), 2000);
+    }
   };
 
-  const deleteAdvisor = (id) => {
-    if (window.confirm("Are you sure you want to delete this advisor?")) {
-      fetch(`http://localhost:3001/advisor/${id}`, {
-        method: "DELETE",
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Failed to delete advisor");
-          }
-          console.log("Advisor deleted successfully");
-          router.back();
-        })
-        .catch((error) => console.error("Error deleting advisor:", error));
+  const handleDeleteAdvisor = async () => {
+    if (!advisor) return;
+    if (confirm("Are you sure you want to delete this advisor?")) {
+      try {
+        await deleteAdvisorById(advisor.id);
+        router.back();
+      } catch (error) {
+        console.error("Error deleting advisor:", error);
+      }
     }
   };
 
   return (
     <>
       <div className={styles.page}>
+        {/* Navbar */}
         <nav className={styles.navbar}>
           <div className={styles.fixedWidth}>
             <Link href="/">
@@ -139,58 +138,62 @@ const AdvisorDetailsPage = () => {
             </Link>
           </div>
         </nav>
-        {advisor.id && (
+        {/* Advisor Details */}
+        {advisor && (
           <div className={styles.fixedWidth}>
             <div className={styles.advisorCard}>
+              {/* Top Section */}
               <div className={styles.topSection}>
+                {/* Profile Image */}
                 <div className={styles.profileImage}>
-                  <img
+                  <Image
                     src={advisor.avatar}
                     alt="Profile Image"
                     width={112}
                     height={112}
                   />
                 </div>
+                {/* Action Buttons */}
                 <div className={styles.actionButtons}>
-                  <div className={styles.notificationMessage}>
-                    {notificationMessage}
-                  </div>
-                  <button
-                    className={styles.backButton}
-                    onClick={() => {
-                      router.back();
-                    }}
-                  >
+                  {notificationMessage && (
+                    <div className={styles.notificationMessage}>
+                      {notificationMessage}
+                    </div>
+                  )}
+                  <Button variant="inline" onClick={() => router.back()}>
                     Back
-                  </button>
-                  <button
-                    className={styles.deleteButton}
-                    onClick={() => deleteAdvisor(advisor.id)}
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={handleDeleteAdvisor}
+                    icon={
+                      <Image
+                        src="/trash.svg"
+                        alt="Delete Icon"
+                        width={14}
+                        height={14}
+                      />
+                    }
                   >
-                    <Image
-                      src="/trash.svg"
-                      alt="Delete Icon"
-                      width={14}
-                      height={14}
-                    />
                     Delete
-                  </button>
-                  <button
-                    className={styles.editButton}
-                    onClick={() => {
-                      setEditModalOpen(true);
-                    }}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => setEditModalOpen(true)}
+                    icon={
+                      <Image
+                        src="/edit.svg"
+                        alt="Edit Icon"
+                        width={14}
+                        height={14}
+                      />
+                    }
                   >
-                    <Image
-                      src="/edit.svg"
-                      alt="Edit Icon"
-                      width={14}
-                      height={14}
-                    />
                     Edit Advisor
-                  </button>
+                  </Button>
                 </div>
               </div>
+              {/* Header Section */}
               <div className={styles.headerSection}>
                 <h1 className={`${noto.className} ${styles.title}`}>
                   {advisor.name}
@@ -206,7 +209,6 @@ const AdvisorDetailsPage = () => {
                   />
                   {advisor.address}
                 </div>
-
                 <div className={styles.metaDetail}>
                   <Image
                     className={styles.metaDetailIcon}
@@ -218,12 +220,16 @@ const AdvisorDetailsPage = () => {
                   {advisor.company}
                 </div>
               </div>
+              {/* Information Section */}
               <div className={styles.infoSection}>
+                {/* You can extract these rows into their own component if desired */}
                 <div className={styles.infoRow}>
-                  <p>ID Number</p> <span>{advisor.identification}</span>
+                  <p>ID Number</p>
+                  <span>{advisor.identification}</span>
                 </div>
                 <div className={styles.infoRow}>
-                  <p>Income</p> <span>{formatCurrency(advisor.income)}</span>
+                  <p>Income</p>
+                  <span>{formatCurrency(advisor.income)}</span>
                 </div>
                 <div className={styles.infoRow}>
                   <p>Education</p> <span>{advisor.education}</span>
@@ -251,169 +257,29 @@ const AdvisorDetailsPage = () => {
           </div>
         )}
       </div>
-      <div
-        className={`${styles.modalOverlay} ${
-          editModalOpen ? styles.isVisible : ""
-        }`}
-        onClick={handleOverlayClick}
+      {/* Edit Modal */}
+      <Modal
+        isOpen={editModalOpen}
+        onClose={() => {
+          setEditModalOpen(false);
+        }}
+        title="Edit Advisor Information"
       >
-        <div className={styles.modal}>
-          <div className={styles.modalHeader}>Edit Advisor Information</div>
-          <form onSubmit={handleEditFormSubmit}>
-            <div className={styles.modalBody}>
-              <div className={styles.pictureUpload}>
-                <div className={styles.profileImage}>
-                  {advisor.avatar && (
-                    <Image
-                      src={advisor.avatar}
-                      alt="Profile Image"
-                      width={112}
-                      height={112}
-                    />
-                  )}
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                  }}
-                  className={styles.uploadButton}
-                >
-                  <Image
-                    src="/upload.svg"
-                    alt="Add Icon"
-                    width={14}
-                    height={14}
-                  />
-                  Upload Picture
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                  }}
-                  className={styles.removeButton}
-                >
-                  Remove
-                </button>
-              </div>
-              <div className={styles.formContainer}>
-                <div className={styles.formField}>
-                  <label htmlFor="name">Name</label>
-                  <input
-                    id="name"
-                    type="text"
-                    placeholder="Enter Name..."
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label htmlFor="id-number">ID Number</label>
-                  <input
-                    id="id-number"
-                    type="text"
-                    placeholder="Enter ID Number..."
-                    value={identification}
-                    onChange={(e) => setIdentification(e.target.value)}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label htmlFor="income">Income</label>
-                  <input
-                    id="income"
-                    type="number"
-                    placeholder="Enter Income..."
-                    value={income}
-                    onChange={(e) => setIncome(e.target.value)}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label htmlFor="company">Company</label>
-                  <input
-                    id="company"
-                    type="text"
-                    placeholder="Enter Company..."
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label htmlFor="education">Education</label>
-                  <input
-                    id="education"
-                    type="text"
-                    placeholder="Enter Education..."
-                    value={education}
-                    onChange={(e) => setEducation(e.target.value)}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label htmlFor="title">Title</label>
-                  <input
-                    id="title"
-                    type="text"
-                    placeholder="Enter Title..."
-                    value={degree}
-                    onChange={(e) => setDegree(e.target.value)}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label htmlFor="level">Professional Level</label>
-                  <input
-                    id="level"
-                    type="text"
-                    placeholder="Enter Professional Level..."
-                    value={level}
-                    onChange={(e) => setLevel(e.target.value)}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label htmlFor="years">Years of Experience</label>
-                  <input
-                    id="years"
-                    type="text"
-                    placeholder="Enter Years of Experience..."
-                    value={years}
-                    onChange={(e) => setYears(e.target.value)}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label htmlFor="email">Email</label>
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="Enter Email..."
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label htmlFor="phone">Phone</label>
-                  <input
-                    id="phone"
-                    type="text"
-                    placeholder="Enter Phone..."
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.modalFooter}>
-              <button
-                className={styles.backButton}
-                onClick={() => setEditModalOpen(false)}
-              >
-                Go Back
-              </button>
-              <button type="submit" className={styles.saveButton}>
-                Save Changes
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+        <AdvisorForm
+          initialValues={{
+            ...formValues,
+            avatar: advisor ? advisor.avatar : "",
+          }}
+          onSubmit={handleUpdateAdvisor}
+          onCancel={(e) => {
+            e.preventDefault();
+            setEditModalOpen(false);
+          }}
+          isEditMode={true}
+        />
+      </Modal>
     </>
   );
 };
+
 export default AdvisorDetailsPage;

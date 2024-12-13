@@ -176,7 +176,8 @@
 
 .buttonContainer {
   display: flex;
-  gap: 10px;
+  gap: 15px;
+  align-items: center;
 }
 
 .input {
@@ -211,6 +212,11 @@
   margin-bottom: 6px;
 }
 
+.notificationMessage {
+  font-size: 14px;
+  color: grey;
+}
+
 .inputIcon {
   position: absolute;
   left: 0px;
@@ -219,37 +225,8 @@
   height: 46px;
 }
 
-.addAdvisorButton,
-.updateIncomeButton {
-  background-color: #5373e3;
-  color: white;
-  border-radius: 4px;
-  border: 1px solid #5373e3;
-  display: inline-block;
-  cursor: pointer;
-  margin: 24px 0;
-  font-size: 14px;
-  padding: 11px 15px;
-  text-decoration: none;
-  transition: 0.3s ease;
-  display: flex;
-  gap: 10px;
-}
-
-.updateIncomeButton {
-  background-color: rgba(255, 255, 255, 0);
-  color: #5373e3;
-  border: 1px solid rgba(255, 255, 255, 0);
-}
-
 .addAdvisorButton {
-  background-color: #5373e3;
-  color: white;
-  border: 1px solid #5373e3;
-}
-
-.addAdvisorButton:hover {
-  background-color: #3351bf;
+  margin: 24px 0;
 }
 
 .tableContainer {
@@ -305,8 +282,8 @@
   transition: 0.3s ease;
   background-color: #ffffff;
   color: #5f5f5f;
-  border-radius: 4px;
   border: 1px solid #ffffff;
+  border-radius: 4px;
   display: inline-block;
   cursor: pointer;
   font-size: 14px;
