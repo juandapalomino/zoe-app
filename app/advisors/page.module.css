@@ -40,6 +40,11 @@
   font-size: 12px;
   color: rgb(157, 157, 157);
 }
+.subtitleLink {
+  font-weight: 400;
+  font-size: 12px;
+  color: rgb(147, 179, 225);
+}
 
 .tableCard {
   width: 100%;
@@ -47,6 +52,7 @@
   border-radius: 4px;
   box-shadow: rgb(0 0 0 / 19%) 0px 2px 7px 0px;
   background: white;
+  margin-bottom: 30px;
 }
 
 .tableTopBar {
@@ -54,6 +60,73 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 22px;
+}
+
+.paginationInfo {
+  color: #8b8b8b;
+  font-size: 14px;
+}
+
+.paginationRightInfo {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  color: #8b8b8b;
+  font-size: 14px;
+}
+.paginationRightInfo select {
+  font-size: 14px;
+  outline: none;
+  background: #ffffff;
+  color: #5f5f5f;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  transition: 0.3s ease;
+  font-family: "Rubik", "Rubik Fallback";
+  font-weight: 400;
+  padding: 3px 5px;
+  margin: 0 7px;
+}
+
+.tablePaginationBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 22px;
+  border-top: 1px solid #e9e9e9;
+}
+
+.tablePaginationBar > * {
+  flex: 1;
+}
+
+.pagesSelector {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pagesSelector button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background-color: white;
+  color: #4e4e4e;
+  border-radius: 4px;
+  border: 1px solid white;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  height: 42px;
+  min-width: 42px;
+}
+
+.pagesSelector button.selected {
+  background-color: #5373e3;
+  color: white;
+  border: 1px solid #5373e3;
 }
 
 .advisorsIcon {
@@ -83,6 +156,27 @@
   justify-content: center;
   position: relative;
   max-width: 100%;
+}
+
+.searchCloseIcon {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  padding: 13px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.searchCloseIcon.isVisible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 10px;
 }
 
 .input {
@@ -125,7 +219,8 @@
   height: 46px;
 }
 
-.addAdvisorButton {
+.addAdvisorButton,
+.updateIncomeButton {
   background-color: #5373e3;
   color: white;
   border-radius: 4px;
@@ -139,6 +234,18 @@
   transition: 0.3s ease;
   display: flex;
   gap: 10px;
+}
+
+.updateIncomeButton {
+  background-color: rgba(255, 255, 255, 0);
+  color: #5373e3;
+  border: 1px solid rgba(255, 255, 255, 0);
+}
+
+.addAdvisorButton {
+  background-color: #5373e3;
+  color: white;
+  border: 1px solid #5373e3;
 }
 
 .addAdvisorButton:hover {
@@ -157,9 +264,7 @@
 }
 
 .table th {
-  text-align: left;
-  padding: 15px 12px;
-  font-weight: 500;
+  padding: 0 12px;
 }
 
 .table td {

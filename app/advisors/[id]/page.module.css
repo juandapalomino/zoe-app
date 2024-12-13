@@ -54,6 +54,7 @@
 .actionButtons {
   align-self: baseline;
   display: flex;
+  align-items: center;
   gap: 24px;
 }
 
@@ -95,6 +96,11 @@
   padding-left: 18px;
 }
 
+.notificationMessage {
+  font-size: 14px;
+  color: grey;
+}
+
 .metaDetailIcon {
   position: absolute;
   left: 0px;
@@ -104,12 +110,17 @@
 .infoRow {
   display: flex;
   justify-content: space-between;
-  padding: 30px 0 0;
+  padding: 20px 0 0;
 }
 
 .infoRow p {
+  font-size: 17px;
   font-weight: 500;
   color: #3f3e3a;
+}
+
+.infoRow a {
+  color: #849cff;
 }
 .infoRow span {
   font-size: 16px;

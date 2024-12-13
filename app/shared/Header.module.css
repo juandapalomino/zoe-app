@@ -1,0 +1,10 @@
+.header {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  padding: 15px 15px 15px 0;
+  font-weight: 500;
+}
